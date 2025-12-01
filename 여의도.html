@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>도일이 이벤트</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .main-image {
+      width: 800px;
+      max-width: 80vw;
+      display: block;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+      padding: 16px;
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .overlay.visible {
+      opacity: 1;
+    }
+
+    .overlay-text {
+      white-space: pre-line;
+      font-size: 30px;
+      line-height: 1.5;
+    }
+
+    button {
+      margin-top: 16px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #000000;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .question-box {
+      margin-top: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 3s;
+    }
+
+    .question-box.show {
+      opacity: 1;
+      pointer-events: auto;
+      font-size: 20px;
+    }
+
+    .question-box input {
+      padding: 10px 20px;
+      border-radius: 4px;
+      border: none;
+      margin-left: 8px;
+      font-size: 20px;
+    }
+
+    .question-box button {
+      margin-left: 4px;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="image-wrapper">
+      <img src="img/1.png" alt="메인 이미지" class="main-image" />
+      <div class="overlay" id="overlay">
+        <div class="overlay-text" id="overlayText"></div>
+      </div>
+    </div>
+
+    <div>
+      <button id="nextLineBtn">▶</button>
+    </div>
+
+    <div class="question-box" id="questionBox">
+      <span>이 자식 사기 당한 것 아니야? 도일이가 마지막으로 만난 사람은?</span>
+      <input type="text" id="answerInput" placeholder="정답을 입력하세요" />
+      <button id="answerBtn">확인</button>
+    </div>
+  </div>
+
+  <script>
+    const lines = [
+      "더현대에 도착하니 크리스마스 분위기가 한창이다.",
+      "승민: 이제 곧 크리스마스네.",
+      "유진: 산타가 올해에는 무슨 선물을 줄까.",
+      "승민: 뭔 소리야 이건 또. 어린이야?",
+      "수영: 에이~ 그런 말 하면 안 돼. \n산타 할아버지는 다 알고 계셔.",
+      "유진: 산타는 항상 모두가 원하는 선물을 \n알잘딱깔센으로 준비한다고.",
+      "승민: ...잠깐만. 너네 혹시 도일이한테 생일 선물 받았어?",
+      "수영: 어? 아직. 왜?",
+      "유진: 뭐 짐작가는 거 있어?",
+      "승민: 여기 대놓고 적혀있는데?",
+      " "
+    ];
+
+    let currentIndex = 0;
+    const overlay = document.getElementById("overlay");
+    const overlayText = document.getElementById("overlayText");
+    const nextLineBtn = document.getElementById("nextLineBtn");
+    const questionBox = document.getElementById("questionBox");
+    const answerInput = document.getElementById("answerInput");
+    const answerBtn = document.getElementById("answerBtn");
+
+    nextLineBtn.addEventListener("click", () => {
+      overlay.classList.add("visible");
+
+      if (currentIndex < lines.length) {
+        // ★ 수정된 부분: 이전 텍스트 지우고 새로운 한 줄만 표시
+        overlayText.textContent = lines[currentIndex];
+        currentIndex++;
+
+        if (currentIndex === lines.length) {
+          nextLineBtn.disabled = true;
+          document.querySelector(".main-image").src = "img/2.png";
+          questionBox.classList.add("show");
+        }
+      }
+    });
+
+    function checkAnswer() {
+      const value = answerInput.value.trim();
+      if (value === "산타") {
+        window.location.href = "https://www.naver.com";
+      }
+    }
+
+    answerBtn.addEventListener("click", checkAnswer);
+    answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAnswer();
+    });
+  </script>
+</body>
+</html>
